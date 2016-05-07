@@ -113,6 +113,7 @@ class CaptchaRecognize:
 
 if __name__=='__main__':
     imageRecognize=CaptchaRecognize()
-    image=Image.open('3.jpeg')
+    image=Image.open('0.jpeg')
     result=imageRecognize.recognise(image)
-    print(result)
+    string=[''.join(item[1]) for item in result]
+    print(string)
