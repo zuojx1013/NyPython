@@ -5,8 +5,9 @@ from scapy.all import *
 
 def getHttpHeaders(http_payload):
     try:
-        headers_raw=http_payload[:http_payload.index("\r\n\r\n")+2]
-        headers=dict(re.findall('(?P<name>.*?):(?P<value>.*?)\r\n',headers_raw))
+        headers=dict(re.findall(r'\r\n([A-Za-z]{2,}.*?\w): (.*?)\r\n',http_payload))
+        if headers=={}:
+            return None
     except:
         return None
     return headers
@@ -14,7 +15,6 @@ def getHttpHeaders(http_payload):
 def extractImage(headers,http_payload):
     image=None
     image_type=None
-
     try:
         if 'image' in headers['Content-Type']:
             image_type=headers['Content-Type'].split('/')[1]
@@ -36,7 +36,6 @@ def httpAssembler(pacp_file):
     imgdir='images'
     a=rdpcap(pacp_file)
     sessions=a.sessions()
-
     for session in sessions:
         http_payload=''
         for packet in sessions[session]:
@@ -45,13 +44,15 @@ def httpAssembler(pacp_file):
                     http_payload+=str(packet[TCP].payload)
             except:
                 pass
+        http_payload=re.sub('\\\\r\\\\n','\\r\\n',http_payload)
         headers=getHttpHeaders(http_payload)
         if headers is None:
             continue
+        print(headers)
         image,image_type=extractImage(headers,http_payload)
         if image is not None and image_type is not None:
             filename='%s-pic_%d.%s'%(pacp_file,carved_images,image_type)
-            img=open('%s/%s'%(imgdir,filename),'wb')
+            img=open('%s/%s'%(imgdir,filename),'w')
             img.write(image)
             img.close()
             carved_images+=1
