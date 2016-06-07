@@ -26,8 +26,8 @@ def packet_callback(packet):
         if headers==None:
             return
         passwd_packet=str(packet[TCP].payload)
-        if  'password' or 'passwd' or 'username' in passwd_packet.lower():
+        if  'password' in passwd_packet.lower() or 'passwd' in passwd_packet.lower() or 'username' in passwd_packet.lower():
             getUser(packet)
-
+        print(packet[IP].load)
 
 packets=sniff(filter='tcp port 80',prn=packet_callback,count=100000)
