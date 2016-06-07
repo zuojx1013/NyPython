@@ -1,0 +1,4 @@
+CVS
+admin
+index.bak
+static
