@@ -4,7 +4,6 @@ import json
 import jieba
 
 def participle(data):
-    jieba.enable_parallel(4)
     result=jieba.cut(data,cut_all=True)
     return result
 
@@ -76,8 +75,12 @@ class Classifier:
         bp=((weight*ap)+(totals*basicprob))/(weight+totals)
         return bp
 
-    def loadtrainedData(self,filename):
-        data=json.loads(open(filename,'r',encoding='utf-8').read())
+    def loadtrainedData(self,filename='traindata.json'):
+        try:
+            data=json.loads(open(filename,'r',encoding='utf-8').read())
+        except:
+            print('load train data failed')
+            return
         self.fc=data['fc']
         self.cc=data['cc']
 
