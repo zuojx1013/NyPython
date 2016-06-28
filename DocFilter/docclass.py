@@ -159,7 +159,7 @@ class FisherClassifier(Classifier):
             sumcount+=term
         return min(sumcount,1)
 
-    def classify(self,item,default=None):
+    def classify(self,item,default=None):#分类
         best=default
         maxnum=0
         for cat in self.categaries():
