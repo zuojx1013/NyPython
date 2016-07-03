@@ -9,7 +9,7 @@ headers = {
         'Accept-Encoding': 'gzip, deflate'}
 
 def train():
-    docfilter=docclass.FisherClassifier(docclass.getChineseWords)
+    docfilter=docclass.FisherClassifier(docclass.get_chinese_words)
     url={'体育':'http://channel.chinanews.com/cns/s/channel:ty.shtml?pager=%s&pagenum=20',
          '娱乐':'http://channel.chinanews.com/cns/s/channel:yl.shtml?pager=%s&pagenum=20',
          '金融':'http://channel.chinanews.com/cns/s/channel:fortune.shtml?pager=%s&pagenum=20',
@@ -19,7 +19,7 @@ def train():
          '社会':'http://channel.chinanews.com/cns/s/channel:sh.shtml?pager=%s&pagenum=20'}
     for key in url:
         startpage=1
-        while startpage<1000:
+        while startpage<100:
             try:
                 html=requests.get(url[key]%(startpage),headers=headers).text.replace(' ','')
             except:
@@ -29,11 +29,11 @@ def train():
                 docfilter.train(item,key)
             print(key,startpage,'ok')
             startpage+=1
-    docfilter.saveTrainData('news_title_traindata.json')
+    docfilter.save_traindata()#('news_title_traindata.json')
 
 def test():
-    docfilter=docclass.FisherClassifier(docclass.getChineseWords)
-    docfilter.loadtrainedData('news_title_traindata.json')
+    docfilter=docclass.FisherClassifier(docclass.get_chinese_words)
+    docfilter.load_traineddata('news_title_traindata.json')
     while True:
         title=input('news title:')
         categarie=docfilter.classify(title)
