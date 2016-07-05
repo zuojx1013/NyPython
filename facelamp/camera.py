@@ -3,7 +3,7 @@ import pygame
 import pygame.camera
 from pygame.locals import *
 import PIL
-from PIL import Image
+from PIL import Image,ImageQt
 import time
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import *
@@ -34,9 +34,10 @@ class Camera(QtWidgets.QMainWindow,Ui_MainWindow):
 
     def timerEvent(self,event):
         image=self.camera_image.get_PIL_image()
+        image=image.transpose(Image.FLIP_LEFT_RIGHT)#左右镜像
         image.save('temp.jpg')
-        path=QPixmap('./temp.jpg')
-        self.imagelabel.setPixmap(path)
+        image=ImageQt.ImageQt(image)
+        self.imagelabel.setPixmap(QPixmap.fromImage(image))
 
     def appclose(self):
         self.camera_image.cam.stop()
