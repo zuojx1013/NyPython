@@ -57,6 +57,7 @@ def image_lbp(image):
 class FaceRecognize():
     def __init__(self):
         self.typedata={}
+        self.load_trained_data()
 
     def train(self,image,label):
         image_his=image_lbp(image)
@@ -108,15 +109,18 @@ def train():
     facerecognize=FaceRecognize()
     for imgname in os.listdir('faces'):
         image=Image.open('faces/%s'%imgname)
-        facerecognize.train(image,'face')
+        facerecognize.train(image,'mainface')
     facerecognize.save_trained_data()
 
 
 if __name__=="__main__":
     facerecognize=FaceRecognize()
-    facerecognize.load_trained_data()
     while True:
         imgpath=input("Input img path:")
-        img=Image.open(imgpath)
+        try:
+            img=Image.open(imgpath)
+        except:
+            print('Open Failed!')
+            continue
         result=facerecognize.compare(img)
         print(result)
