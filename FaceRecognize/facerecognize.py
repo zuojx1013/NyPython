@@ -3,6 +3,7 @@ import json
 import math
 
 def image_lbp(image):
+    image=image.resize((int(image.size[0]/4),int(image.size[1]/4)),Image.ANTIALIAS)
     image=image.convert('L')
     result=Image.new('L',image.size,255)
     for x in range(1,image.size[0]-1):
@@ -57,7 +58,6 @@ def image_lbp(image):
 class FaceRecognize():
     def __init__(self):
         self.typedata={}
-        self.load_trained_data()
 
     def train(self,image,label):
         image_his=image_lbp(image)
@@ -97,11 +97,19 @@ class FaceRecognize():
         compare_result={}
         for key in self.typedata:
             count=0
+            '''
             compare_value=0
             for img in self.typedata[key]:
                 compare_value+=self.chi_square_statistic(his,img)
                 count+=1
             compare_result[key]=compare_value/count
+            '''
+            compare_value=200000
+            for img in self.typedata[key]:
+                value=self.chi_square_statistic(his,img)
+                if value<compare_value:
+                    compare_value=value
+            compare_result[key]=compare_value
         return compare_result
 
 def train():
@@ -109,8 +117,8 @@ def train():
     facerecognize=FaceRecognize()
     for imgname in os.listdir('faces'):
         image=Image.open('faces/%s'%imgname)
-        facerecognize.train(image,'face')
-    facerecognize.save_trained_data()
+        facerecognize.train(image,'BigBoss')
+    facerecognize.save_trained_data('facedata.json')
 
 
 if __name__=="__main__":
