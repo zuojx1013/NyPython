@@ -27,6 +27,12 @@ def getUser(packet,baseinfor):
     f.write("Data:{}".format(packet[IP].payload)+'\n\n\n')
     f.close()
 
+def get_cookie(packet,baseinfor):
+    f=open('cookie_data.txt','a')
+    f.write(baseinfor+'\n')
+    f.write("Data:{}".format(packet[IP].payload)+'\n\n\n')
+    f.close()
+
 def packet_callback(packet):
     try:
         statue=packet[TCP].load
@@ -39,8 +45,10 @@ def packet_callback(packet):
     baseinfor=baseInfor(packet,data)
     print(baseinfor,'\n-----')
     passwd_packet=str(packet[TCP].payload)
-    if  'password' in passwd_packet.lower() or 'passwd' in passwd_packet.lower() or 'username' in passwd_packet.lower():
+    if  'password' in passwd_packet.lower() or 'passwd' in passwd_packet.lower() or 'pwd' in passwd_packet.lower() or 'username' in passwd_packet.lower():
         getUser(packet,baseinfor)
+    if 'Cookie' in passwd_packet.lower():
+        get_cookie(packet,baseinfor)
     '''
     writer=PcapWriter('data.pcap', append = True)
     writer.write(packet)
