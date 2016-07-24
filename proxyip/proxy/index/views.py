@@ -21,7 +21,10 @@ def enable_ip(page,num):
     rows=cursor.execute('select * from enableips')
     iplist=[]
     for row in rows:
-        iplist.append(row[0])
+        item={}
+        item['ip']=row[0]
+        item['update_date']=row[1]
+        iplist.append(item)
     length=len(iplist)
     start=(page-1)*num
     end=page*num
