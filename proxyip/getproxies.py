@@ -117,6 +117,17 @@ if __name__ == '__main__':
     cursor.execute('create table if not exists enableips(ip char(50) primary key,date char(50))')
     conn.commit()
     conn.close()
-    get_from_ipcn()
-    get_from_kxdaili()
-    get_from_xicidaili()
+    while True:
+        try:
+            get_from_ipcn()
+        except:
+            print('get_from_ipcn','failed')
+        try:
+            get_from_kxdaili()
+        except:
+            print('get_from_kxdaili','failed')
+        try:
+            get_from_xicidaili()
+        except:
+            print('get_from_xicidaili failed')
+        time.sleep(180)

@@ -66,4 +66,6 @@ def verify():
         work.join()
 
 if __name__ == '__main__':
-    verify()
+    while True:
+        verify()
+        time.sleep(600)
